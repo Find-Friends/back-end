@@ -15,6 +15,17 @@ const requiredRegistration = (req, res, next) => {
   }
 };
 
+const requiredLogin = (req, res, next) => {
+  const { username, password } = req.body;
+  if (username && password) {
+    next();
+  } else {
+    res.status(400).json({
+      message: "Username and password are required!"
+    });
+  }
+};
+
 //Required - username, password, firstName, lastName
 //Optional - Age(int), gender, location, description
 //RequiredRegistration works!
@@ -27,25 +38,23 @@ router.post("/register", requiredRegistration, (req, res) => {
 
   Users.insert({ ...creds, password: hash })
     .then(user => {
-      console.log(user);
       res.status(201).json({ message: "User created!" });
     })
     .catch(err => {
-      console.log(err);
       res.status(500).json({ message: "", error: err });
     });
 });
 
-router.post("/login", (req, res) => {
+// Required - username and password
+// RequiredLogin Middleware works
+router.post("/login", requiredLogin, (req, res) => {
   const creds = req.body;
 
   Users.getBy({ username: creds.username })
     .then(user => {
-      console.log(user);
       //Check if passwords are the same
       if (user && bcrypt.compareSync(creds.password, user.password)) {
         const token = generateToken(user);
-        console.log(token);
         res.status(202).json({
           message: "Correct Credentials!",
           token
@@ -59,8 +68,6 @@ router.post("/login", (req, res) => {
       res.status(500).json({ message: "Database error", error: err });
     });
 });
-
-router.post("/logout", (req, res) => {});
 
 function generateToken(user) {
   const payload = {
