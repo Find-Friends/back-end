@@ -6,9 +6,7 @@ Notion Document[https://www.notion.so/Product-Vision-f8263f3173144c66b8acaf3ef6d
 
 ## Endpoints
 
-### SQL
-
-### Notes
+### SQL (Planning)
 
 User Table
 -id
@@ -30,18 +28,10 @@ userID: 2
 }]
 }
 
-User = {
-id: 1,
-friends: []
-}
+### Migrations
 
-//click on user with id 3 to be my friend
+Made two tables from Planning
 
-User = {
-id: 3,
-friends: [{
-id: 1,
-accepted: false,
-other info
-}]
-}
+### Seed Data
+
+[{id: 1, username: "Devin", password}]
