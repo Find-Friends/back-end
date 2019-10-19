@@ -15,13 +15,63 @@ const getBy = prop => {
     .first();
 };
 
+const getFriends = id => {
+  return db("friends")
+    .join("users", "id", "=", "requestID")
+    .select(
+      "users.id",
+      "users.firstName",
+      "users.lastName",
+      "users.age",
+      "users.gender",
+      "users.description",
+      "users.location",
+      "friends.email"
+    )
+    .where({
+      currentID: id,
+      accepted: 1
+    });
+};
+
+const getRequests = id => {
+  return db("friends")
+    .join("users", "id", "=", "requestID")
+    .select(
+      "users.id",
+      "users.firstName",
+      "users.lastName",
+      "users.age",
+      "users.gender",
+      "users.description",
+      "users.location",
+      "friends.email",
+      "friends.message"
+    )
+    .where({
+      currentID: id,
+      accepted: 0
+    });
+};
+
+const insertFriend = (id, requestID, message, email) => {
+  return db("friends").insert({ currentID: id, requestID, message, email });
+};
+
+const acceptRequest = (id, requestID) => {
+  return db("friends")
+    .where({ currentID: id, requestID })
+    .update({ accepted: 1 });
+};
+
 const update = (id, changes) => {
   return db("users")
     .where(id)
     .update(changes)
     .then(res => {
+      console.log("res", res, id);
       if (res === 1) {
-        getBy(id);
+        return getBy(id);
       } else {
         return undefined;
       }
@@ -44,5 +94,9 @@ module.exports = {
   insert,
   getBy,
   update,
-  deleteUser
+  deleteUser,
+  getFriends,
+  getRequests,
+  insertFriend,
+  acceptRequest
 };

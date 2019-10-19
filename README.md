@@ -40,3 +40,14 @@ Made two tables from Planning
 
 get all by id
 -make it so if you've requested someone they don't show up etc
+
+### Friends
+
+see all potential friends
+-get /:id/all
+
+## see accepted friends
+
+## see requested friends
+
+post/insert yourself to someone else's friends
