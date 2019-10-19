@@ -35,3 +35,8 @@ Made two tables from Planning
 ### Seed Data
 
 [{id: 1, username: "Devin", password}]
+
+#### Extra
+
+get all by id
+-make it so if you've requested someone they don't show up etc

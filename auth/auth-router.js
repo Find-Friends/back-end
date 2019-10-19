@@ -28,7 +28,7 @@ const requiredLogin = (req, res, next) => {
 
 //Required - username, password, firstName, lastName
 //Optional - Age(int), gender, location, description
-//RequiredRegistration works!
+//RequiredRegistration - requeset without one of 4 required
 //11:45 am works!
 router.post("/register", requiredRegistration, (req, res) => {
   const creds = req.body;
@@ -46,7 +46,8 @@ router.post("/register", requiredRegistration, (req, res) => {
 });
 
 // Required - username and password
-// RequiredLogin Middleware works
+// RequiredLogin Middleware works - request without password
+// Works at 11:49am
 router.post("/login", requiredLogin, (req, res) => {
   const creds = req.body;
 

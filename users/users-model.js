@@ -5,6 +5,10 @@ const insert = user => {
   return db("users").insert(user);
 };
 
+const getAll = id => {
+  return db("users").whereNot(id);
+};
+
 const getBy = prop => {
   return db("users")
     .where(prop)
@@ -36,6 +40,7 @@ const deleteUser = id => {
 };
 
 module.exports = {
+  getAll,
   insert,
   getBy,
   update,
