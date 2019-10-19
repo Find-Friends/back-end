@@ -6,8 +6,7 @@ const Users = require("../users/users-model.js");
 
 const requiredRegistration = (req, res, next) => {
   const { username, password, firstName, lastName } = req.body;
-
-  if (!username && !password && !firstName && !lastName) {
+  if (username && password && firstName && lastName) {
     next();
   } else {
     res.status(400).json({
@@ -18,6 +17,8 @@ const requiredRegistration = (req, res, next) => {
 
 //Required - username, password, firstName, lastName
 //Optional - Age(int), gender, location, description
+//RequiredRegistration works!
+//11:45 am works!
 router.post("/register", requiredRegistration, (req, res) => {
   const creds = req.body;
   console.log(creds);
