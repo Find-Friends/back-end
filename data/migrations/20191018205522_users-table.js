@@ -10,7 +10,6 @@ exports.up = function(knex) {
     tbl.string("last_name").notNullable();
     tbl.integer("age");
     tbl.string("gender");
-    tbl.string("birthday");
     tbl.string("location");
     tbl.string("description");
   });
