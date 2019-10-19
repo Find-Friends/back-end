@@ -67,9 +67,8 @@ const acceptRequest = (id, requestID) => {
 const update = (id, changes) => {
   return db("users")
     .where(id)
-    .update(changes)
+    .update({ ...changes, interests: JSON.stringify(changes.interests) })
     .then(res => {
-      console.log("res", res, id);
       if (res === 1) {
         return getBy(id);
       } else {

@@ -34,7 +34,7 @@ Made two tables from Planning
 
 ### Seed Data
 
-[{id: 1, username: "Devin", password}]
+[{id: 1, username: "james", password}]
 
 #### Extra
 
