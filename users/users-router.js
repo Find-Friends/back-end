@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Users = require("../users/users-model.js");
-const restricted = require("../auth/restricted-middleware.js"); //Works without middleware
 
 /*---------Get user Info---------*/
 
@@ -8,7 +7,7 @@ const restricted = require("../auth/restricted-middleware.js"); //Works without 
 // Required: id --> returns user object
 // incorrect id --> 404 No use with that ID
 // Works at 11:56am
-router.get("/:id", restricted, (req, res) => {
+router.get("/:id", (req, res) => {
   Users.getBy({ id: req.params.id })
     .then(user => {
       if (user) {
@@ -25,9 +24,8 @@ router.get("/:id", restricted, (req, res) => {
 // all users except myself
 // required is id --> all users objects
 // incorrect id --> 404
-router.get("/:id/all", restricted, checkID, (req, res) => {
+router.get("/:id/all", checkID, (req, res) => {
   //make sure user exists
-  const { id } = req.params;
   Users.getAll({ id: req.params.id })
     .then(users => {
       if (users.length) {
@@ -52,7 +50,7 @@ router.get("/:id/all", restricted, checkID, (req, res) => {
 // incorrect changes --> 500
 // Works at 11:56am
 /*---------Update User Info---------*/
-router.put("/:id", restricted, checkID, (req, res) => {
+router.put("/:id", checkID, (req, res) => {
   const changes = req.body;
   const id = req.params;
 
@@ -68,7 +66,7 @@ router.put("/:id", restricted, checkID, (req, res) => {
 });
 
 //accepted friends = accepted: true
-router.get("/:id/friends", restricted, checkID, (req, res) => {
+router.get("/:id/friends", checkID, (req, res) => {
   const { id } = req.params;
 
   Users.getFriends(id)
@@ -102,7 +100,7 @@ router.get("/:id/requests", (req, res) => {
 
 //finding a friend
 //body has message and email
-router.post("/:id/:requestID", restricted, checkID, (req, res) => {
+router.post("/:id/:requestID", checkID, (req, res) => {
   const { message, email } = req.body;
   const { id, requestID } = req.params;
 
@@ -125,7 +123,7 @@ router.post("/:id/:requestID", restricted, checkID, (req, res) => {
 
 //accept the request
 //needs your id and then req.body needs friend id, changes accepted to true
-router.put("/:id/:requestID", restricted, checkID, (req, res) => {
+router.put("/:id/:requestID", checkID, (req, res) => {
   const { id, requestID } = req.params;
 
   Users.acceptRequest(id, requestID)
@@ -143,7 +141,7 @@ router.put("/:id/:requestID", restricted, checkID, (req, res) => {
 });
 
 /*---------Delete User/Account---------*/
-router.delete("/:id", restricted, checkID, (req, res) => {
+router.delete("/:id", checkID, (req, res) => {
   const id = req.params;
 
   Users.deleteUser(id)
