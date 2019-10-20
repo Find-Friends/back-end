@@ -32,7 +32,6 @@ const requiredLogin = (req, res, next) => {
 //11:45 am works!
 router.post("/register", requiredRegistration, (req, res) => {
   const creds = req.body;
-  console.log(creds);
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(creds.password, salt);
 
@@ -58,6 +57,7 @@ router.post("/login", requiredLogin, (req, res) => {
         const token = generateToken(user);
         res.status(202).json({
           message: "Correct Credentials!",
+          id: user.id,
           token
         });
       } else {
