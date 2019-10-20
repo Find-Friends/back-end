@@ -29,15 +29,20 @@ const requiredLogin = (req, res, next) => {
 //Required - username, password, firstName, lastName
 //Optional - Age(int), gender, location, description
 //RequiredRegistration - requeset without one of 4 required
-//11:45 am works!
 router.post("/register", requiredRegistration, (req, res) => {
   const creds = req.body;
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(creds.password, salt);
 
   Users.insert({ ...creds, password: hash })
-    .then(user => {
-      res.status(201).json({ message: "User created!" });
+    .then(() => {
+      Users.getBy({ username: creds.username }).then(user => {
+        const token = generateToken(user);
+        res.status(201).json({
+          id: user.id,
+          token
+        });
+      });
     })
     .catch(err => {
       res.status(500).json({ message: "", error: err });
@@ -46,7 +51,6 @@ router.post("/register", requiredRegistration, (req, res) => {
 
 // Required - username and password
 // RequiredLogin Middleware works - request without password
-// Works at 11:49am
 router.post("/login", requiredLogin, (req, res) => {
   const creds = req.body;
 
