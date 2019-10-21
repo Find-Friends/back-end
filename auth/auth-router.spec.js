@@ -5,7 +5,7 @@ const Users = require("../data/dbConfig.js");
 const bcrypt = require("bcryptjs");
 
 // the data access file we are testing
-const server = require("../server");
+const server = require("../api/server");
 
 describe("POST /register", function() {
   beforeEach(async () => {
@@ -15,8 +15,13 @@ describe("POST /register", function() {
 
   it("responds with 201", function(done) {
     request(server)
-      .post("/register")
-      .send({ username: "jofdfdfdfhn", password: "butteeeee" })
+      .post("/api/auth/register")
+      .send({
+        username: "jane",
+        password: "field",
+        firstName: "Jane",
+        lastName: "Field"
+      })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(201)
@@ -26,13 +31,13 @@ describe("POST /register", function() {
       });
   });
 
-  it("responds with 500 with incorrect body", function(done) {
+  it("responds with 400 with incorrect body", function(done) {
     request(server)
-      .post("/register")
-      .send({ fdssd: "jofdfdfdfhn", password: "butteeeee" })
+      .post("/api/auth/register")
+      .send({ fdssd: "jofdfdfdfhn", password: "fanmes" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(500)
+      .expect(400)
       .end(function(err, res) {
         if (err) return done(err);
         done();
@@ -43,14 +48,19 @@ describe("POST /register", function() {
 describe("POST /login", function() {
   it("202 with correct login", function(done) {
     const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync("Devin", salt);
+    const hash = bcrypt.hashSync("Test", salt);
 
     return Users("users")
-      .insert({ username: "Devin", password: hash })
+      .insert({
+        username: "Test",
+        password: hash,
+        firstName: "Test",
+        lastName: "Ligament"
+      })
       .then(() => {
         request(server)
-          .post("/login")
-          .send({ username: "Devin", password: "Devin" })
+          .post("/api/auth/login")
+          .send({ username: "Test", password: "Test" })
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(202)
@@ -61,13 +71,26 @@ describe("POST /login", function() {
       });
   });
 
-  it("responds with 500 with incorrect body", function(done) {
+  it("responds with 400 with incorrect credentials", function(done) {
     request(server)
-      .post("/register")
-      .send({ fdssd: "jofdfdfdfhn", password: "butteeeee" })
+      .post("/api/auth/login")
+      .send({ usernasdadfsame: "Test", password: "fun" })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(500)
+      .expect(400)
+      .end(function(err, res) {
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it("responds with 401 with incorrect credentials", function(done) {
+    request(server)
+      .post("/api/auth/login")
+      .send({ username: "Test", password: "fun" })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(401)
       .end(function(err, res) {
         if (err) return done(err);
         done();
