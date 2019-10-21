@@ -68,9 +68,21 @@ const insertFriend = (id, requestID, message, email) => {
   return db("friends").insert({ currentID: id, requestID, message, email });
 };
 
-const acceptRequest = (id, requestID) => {
-  return db("friends")
+const acceptRequest = async (id, requestID) => {
+  const first = await db("friends")
     .where({ currentID: id, requestID })
+    .update({ accepted: 1 });
+
+  const second = await db("friends").where({
+    currentID: requestID,
+    requestID: id
+  });
+
+  if (!second.length) {
+    insertFriend({ requestID, id, message: "", email: "" });
+  }
+  return db("friends")
+    .where({ currentID: requestID, requestID: id })
     .update({ accepted: 1 });
 };
 
