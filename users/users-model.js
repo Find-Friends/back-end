@@ -6,7 +6,17 @@ const insert = user => {
 };
 
 const getAll = id => {
-  return db("users").whereNot(id);
+  return db("users")
+    .select(
+      "users.id",
+      "users.firstName",
+      "users.lastName",
+      "users.age",
+      "users.gender",
+      "users.description",
+      "users.location"
+    )
+    .whereNot(id);
 };
 
 const getBy = prop => {
@@ -79,7 +89,6 @@ const update = (id, changes) => {
 
 const deleteUser = id => {
   return getBy(id).then(res => {
-    console.log(res);
     if (res) {
       return db("users")
         .where(id)
