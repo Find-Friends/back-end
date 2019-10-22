@@ -1,6 +1,6 @@
 const request = require("supertest");
 
-const Users = require("../data/dbConfig.js");
+const db = require("../data/dbConfig.js");
 
 const bcrypt = require("bcryptjs");
 
@@ -8,9 +8,13 @@ const bcrypt = require("bcryptjs");
 const server = require("../api/server");
 
 describe("POST /register", function() {
+  it("should set environment to testing", () => {
+    expect(process.env.DB_ENV).toBe("testing");
+  });
+
   beforeEach(async () => {
     // this function executes and clears out the table before each test
-    await Users("users").truncate();
+    await db("users").truncate();
   });
 
   it("responds with 201", function(done) {
@@ -50,7 +54,7 @@ describe("POST /login", function() {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync("Test", salt);
 
-    return Users("users")
+    return db("users")
       .insert({
         username: "Test",
         password: hash,

@@ -9,7 +9,10 @@
     "test": "cross-env DB_ENV=testing jest --watch --verbose"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "repository": {
     "type": "git",
