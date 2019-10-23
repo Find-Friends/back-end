@@ -65,7 +65,9 @@ const getRequests = id => {
 };
 
 const insertFriend = (id, requestID, message, email) => {
-  return db("friends").insert({ currentID: id, requestID, message, email });
+  return db("friends")
+    .returning("id")
+    .insert({ currentID: id, requestID, message, email });
 };
 
 const acceptRequest = async (id, requestID) => {
