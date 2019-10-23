@@ -110,11 +110,7 @@ router.post("/:id/:requestID", checkID, (req, res) => {
 
   Users.insertFriend(id, requestID, message, email)
     .then(response => {
-      if (response.length) {
-        res.status(200).json({ message: "Request successful!" });
-      } else {
-        res.status(400).json({ message: "Request unsuccessful!" });
-      }
+      res.status(200).json({ message: "Request successful!" });
     })
     .catch(err => {
       res.status(500).json({ message: "Database Error", error: err });
