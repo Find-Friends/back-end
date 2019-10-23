@@ -47,8 +47,6 @@ router.get("/:id/all", checkID, (req, res) => {
 
 // Update user information
 // Required: id, changes --> returns user object
-// incorrect changes --> 500
-// Works at 11:56am
 /*---------Update User Info---------*/
 router.put("/:id", checkID, (req, res) => {
   const changes = req.body;
@@ -86,12 +84,24 @@ router.get("/:id/requests", (req, res) => {
   const { id } = req.params;
 
   Users.getRequests(id)
-    .then(friends => {
-      if (friends.length) {
-        res.status(200).json({ friends });
+    .then(requests => {
+      if (requests.length) {
+        res.status(200).json({ requests });
       } else {
         res.status(400).json({ message: "You need to make some friends!" });
       }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Database Error", error: err });
+    });
+});
+
+router.delete("/:id/requests/:requestID", checkID, (req, res) => {
+  const { id, requestID } = req.params;
+
+  Users.removeRequest(id, requestID)
+    .then(() => {
+      res.status(200).json({ message: "Deleted request!" });
     })
     .catch(err => {
       res.status(500).json({ message: "Database Error", error: err });

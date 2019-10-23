@@ -86,6 +86,12 @@ const acceptRequest = async (id, requestID) => {
     .update({ accepted: 1 });
 };
 
+const removeRequest = (id, requestID) => {
+  return db("friends")
+    .where({ currentID: id, requestID })
+    .del();
+};
+
 const update = (id, changes) => {
   return db("users")
     .where(id)
@@ -118,5 +124,6 @@ module.exports = {
   getFriends,
   getRequests,
   insertFriend,
-  acceptRequest
+  acceptRequest,
+  removeRequest
 };
