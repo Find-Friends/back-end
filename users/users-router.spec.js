@@ -8,8 +8,8 @@ const server = require("../api/server"); // the express server
 let token;
 
 beforeAll(done => {
-  request(server)
-    .post("/login")
+  return request(server)
+    .post("/api/auth/login")
     .send({
       username: "DarkLord",
       password: "test"
@@ -20,8 +20,8 @@ beforeAll(done => {
     });
 });
 
-describe("GET /", () => {
-  // token not being sent - should respond with a 401
+describe("GET /api/users/:id", () => {
+  // token not being sent - should respond with a 400
   test("It should require authorization", () => {
     return request(server)
       .get("/api/users")
@@ -29,11 +29,21 @@ describe("GET /", () => {
         expect(response.statusCode).toBe(400);
       });
   });
+
+  // it should respond with a 401 if the token is incorrect
+  test("It should require authorization", () => {
+    return request(server)
+      .get("/api/users")
+      .set("Authorization", `asdfadsewaaew`)
+      .then(response => {
+        expect(response.statusCode).toBe(401);
+      });
+  });
   // send the token - should respond with a 200
   test("It responds with JSON", () => {
     return request(server)
-      .get("/")
-      .set("Authorization", `Bearer ${token}`)
+      .get("/api/users/2")
+      .set("Authorization", `${token}`)
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe("application/json");
