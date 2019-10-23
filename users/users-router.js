@@ -110,7 +110,8 @@ router.post("/:id/:requestID", checkID, (req, res) => {
 
   Users.insertFriend(id, requestID, message, email)
     .then(response => {
-      if (response.length) {
+      console.log(response);
+      if (response.length > 0) {
         res.status(200).json({ message: "Request successful!" });
       } else {
         res.status(404).json({ message: "Request Unsuccessful!" });
