@@ -124,12 +124,7 @@ router.put("/:id/:requestID", checkID, (req, res) => {
 
   Users.acceptRequest(id, requestID)
     .then(response => {
-      console.log(response);
-      if (response) {
-        res.status(200).json({ message: "Request successful!" });
-      } else {
-        res.status(404).json({ message: "Request Unsuccessful!" });
-      }
+      res.status(200).json({ message: "Request successful!" });
     })
     .catch(err => {
       res.status(500).json({ message: "Database Error", error: err });
