@@ -64,6 +64,26 @@ const getRequests = id => {
     );
 };
 
+const getSentRequests = id => {
+  return db("friends")
+    .where({
+      currentID: id,
+      accepted: 0
+    })
+    .join("users", "id", "=", "requestID")
+    .select(
+      "users.id",
+      "users.firstName",
+      "users.lastName",
+      "users.age",
+      "users.gender",
+      "users.description",
+      "users.location",
+      "friends.email",
+      "friends.message"
+    );
+};
+
 const insertFriend = (id, requestID, message, email) => {
   return db("friends").insert({ currentID: id, requestID, message, email });
 };
@@ -125,5 +145,6 @@ module.exports = {
   getRequests,
   insertFriend,
   acceptRequest,
-  removeRequest
+  removeRequest,
+  getSentRequests
 };

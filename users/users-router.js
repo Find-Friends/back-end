@@ -19,7 +19,7 @@ router.get("/:id", (req, res) => {
     .catch(err => {
       res.status(500).json({ message: "Database error", error: err });
     });
-}); //works without middleware
+});
 
 // all users except myself
 // required is id --> all users objects
@@ -89,6 +89,24 @@ router.get("/:id/requests", (req, res) => {
         res.status(200).json({ requests });
       } else {
         res.status(400).json({ message: "You need to make some friends!" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Database Error", error: err });
+    });
+});
+
+router.get("/:id/requests/sent", (req, res) => {
+  const { id } = req.params;
+
+  Users.getSentRequests(id)
+    .then(requests => {
+      if (requests.length) {
+        res.status(200).json({ requests });
+      } else {
+        res
+          .status(400)
+          .json({ message: "You need to make some requests to friends!" });
       }
     })
     .catch(err => {
