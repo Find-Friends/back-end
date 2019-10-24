@@ -43,7 +43,29 @@ router.get("/:id/all", checkID, (req, res) => {
         .status(500)
         .json({ message: "An error has occurred on the server.", error: err });
     });
-}); //works without middleware
+});
+
+router.get("/:id/potentialFriends", checkID, (req, res) => {
+  //make sure user exists
+  const { id } = req.params;
+  Users.getAllPotential(id)
+    .then(users => {
+      if (users.length) {
+        res.status(200).json({
+          users
+        });
+      } else {
+        res.status(404).json({
+          message: "There are no users in the database for some reason!"
+        });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "An error has occurred on the server.", error: err });
+    });
+});
 
 // Update user information
 // Required: id, changes --> returns user object

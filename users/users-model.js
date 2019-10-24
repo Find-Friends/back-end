@@ -44,6 +44,22 @@ const getFriends = id => {
     );
 };
 
+const getAllPotential = async id => {
+  const friends = await getFriends(id).map(friend => friend.id);
+  const userList = await db("users")
+    .select(
+      "users.id",
+      "users.firstName",
+      "users.lastName",
+      "users.age",
+      "users.gender",
+      "users.description",
+      "users.location"
+    )
+    .whereNot({ id });
+  return userList.filter(user => !friends.includes(user.id));
+};
+
 const getRequests = id => {
   return db("friends")
     .where({
@@ -137,6 +153,7 @@ const deleteUser = id => {
 
 module.exports = {
   getAll,
+  getAllPotential,
   insert,
   getBy,
   update,
