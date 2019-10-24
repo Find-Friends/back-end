@@ -9,15 +9,21 @@ let token;
 
 beforeAll(done => {
   return request(server)
-    .post("/api/auth/login")
+    .post("/api/auth/register")
     .send({
-      username: "DarkLord",
-      password: "test"
+      username: Date.now(),
+      password: "test",
+      firstName: "Sam",
+      lastName: "Gamgee"
     })
     .end((err, response) => {
       token = response.body.token; // save the token!
       done();
     });
+});
+
+it("should set environment to testing", () => {
+  expect(process.env.DB_ENV).toBe("testing");
 });
 
 describe("GET /api/users/:id", () => {
@@ -42,7 +48,7 @@ describe("GET /api/users/:id", () => {
   // send the token - should respond with a 200
   test("It responds with JSON", () => {
     return request(server)
-      .get("/api/users/2")
+      .get("/api/users/1")
       .set("Authorization", `${token}`)
       .then(response => {
         expect(response.statusCode).toBe(200);
