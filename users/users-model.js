@@ -27,7 +27,11 @@ const getBy = prop => {
 
 const getFriends = id => {
   return db("friends")
-    .join("users", "id", "=", "requestID")
+    .where({
+      requestID: id,
+      accepted: 1
+    })
+    .join("users", "id", "=", "currentID")
     .select(
       "users.id",
       "users.firstName",
@@ -37,16 +41,16 @@ const getFriends = id => {
       "users.description",
       "users.location",
       "friends.email"
-    )
-    .where({
-      currentID: id,
-      accepted: 1
-    });
+    );
 };
 
 const getRequests = id => {
   return db("friends")
-    .join("users", "id", "=", "requestID")
+    .where({
+      requestID: id,
+      accepted: 0
+    })
+    .join("users", "id", "=", "currentID")
     .select(
       "users.id",
       "users.firstName",
@@ -57,11 +61,7 @@ const getRequests = id => {
       "users.location",
       "friends.email",
       "friends.message"
-    )
-    .where({
-      currentID: id,
-      accepted: 0
-    });
+    );
 };
 
 const insertFriend = (id, requestID, message, email) => {
