@@ -155,8 +155,6 @@ const deleteUser = async id => {
     })
     .del();
 
-  // const allDelete = requestDelete.concat(currentDelete);
-
   await db("users")
     .where({ id: user.id })
     .del();

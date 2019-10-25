@@ -46,6 +46,17 @@ describe("GET /api/users/:id", () => {
       });
   });
   // send the token - should respond with a 200
+  test("It responds with status code of 200 for put request", () => {
+    return request(server)
+      .put("/api/users/1")
+      .send({ username: "first" })
+      .set("Authorization", `${token}`)
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.type).toBe("application/json");
+      });
+  });
+
   test("It responds with JSON", () => {
     return request(server)
       .get("/api/users/1")
@@ -53,6 +64,15 @@ describe("GET /api/users/:id", () => {
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe("application/json");
+      });
+  });
+
+  test("It responds with 404 for undefined id", () => {
+    return request(server)
+      .get("/api/users/200")
+      .set("Authorization", `${token}`)
+      .then(response => {
+        expect(response.statusCode).toBe(404);
       });
   });
 });
