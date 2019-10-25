@@ -141,14 +141,27 @@ const update = (id, changes) => {
     });
 };
 
-const deleteUser = id => {
-  return getBy(id).then(res => {
-    if (res) {
-      return db("users")
-        .where(id)
-        .del();
-    }
-  });
+const deleteUser = async id => {
+  const user = await getBy(id);
+
+  await db("friends")
+    .where({
+      requestID: user.id
+    })
+    .del();
+  await db("friends")
+    .where({
+      currentID: user.id
+    })
+    .del();
+
+  // const allDelete = requestDelete.concat(currentDelete);
+
+  await db("users")
+    .where({ id: user.id })
+    .del();
+
+  return user;
 };
 
 module.exports = {
