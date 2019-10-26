@@ -40,6 +40,16 @@ router.post("/register", requiredRegistration, (req, res) => {
         const token = generateToken(user);
         res.status(201).json({
           id: user.id,
+          user: {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            age: user.age,
+            gender: user.gender,
+            location: user.location,
+            description: user.description,
+            interests: user.interests
+          },
           token
         });
       });
@@ -62,6 +72,16 @@ router.post("/login", requiredLogin, (req, res) => {
         res.status(202).json({
           message: "Correct Credentials!",
           id: user.id,
+          user: {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            age: user.age,
+            gender: user.gender,
+            location: user.location,
+            description: user.description,
+            interests: user.interests
+          },
           token
         });
       } else {
